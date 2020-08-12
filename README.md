@@ -46,7 +46,8 @@
 
 Обновим образ initrd.
 
-``# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img//g"` --force; done``
+``# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g;
+s/.img//g"` --force; done``
 
 В файле */boot/grub2/grub.cfg* нужно заменить предыдущий том lvm на вновь созданный: *rd.lvm.lv=VolGroup00/LogVol00* => *rd.lvm.lv=vg_root/lv_root*
 
