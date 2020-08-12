@@ -6,15 +6,18 @@
 Подготовим временный том для / раздела.
 
 Создаем раздел pv:
-`# pvcreate /dev/sdb`
+```# pvcreate /dev/sdb
+```
 *Physical volume "/dev/sdb" successfully created.*
 
 Создаем раздел vm:
-`# vgcreate vg_root /dev/sdb`
+```# vgcreate vg_root /dev/sdb
+```
 *Volume group "vg_root" successfully created*
 
 Создаем раздел lv:
-`# lvcreate -n lv_root -l +100%FREE /dev/vg_root  Logical volume`
+```# lvcreate -n lv_root -l +100%FREE /dev/vg_root  Logical volume
+```
 *"lv_root" created.*
 
 Создадим на нем файловую систему и смонтируем его, чтобы перенести туда данные:
