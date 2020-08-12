@@ -4,8 +4,8 @@
 ## Уменьшить том под / (корневой каталог) до 8G
 
 Подготовим временный том для / раздела.
-
-  pvcreate /dev/sdb  
+    pvcreate /dev/sdb
+  
 *Physical volume "/dev/sdb" successfully created.*
 
 `$ vgcreate vg_root /dev/sdb`
