@@ -5,7 +5,7 @@
 
 Подготовим временный том для / раздела.
 
-`$ pvcreate /dev/sdb`  
+  pvcreate /dev/sdb  
 *Physical volume "/dev/sdb" successfully created.*
 
 `$ vgcreate vg_root /dev/sdb`
@@ -121,4 +121,4 @@ cp -aR /home/* /mnt/
 `# umount /mnt`
 `# mount /dev/vg_home/lv_home /home/`
 
-*echo "`blkid | grep lv_home | awk '{print $2}'` /home ext4 defaults 0 0" >> /etc/fstab*
+*echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab*
