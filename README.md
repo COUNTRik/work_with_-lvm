@@ -20,9 +20,9 @@
 
 Создаем раздел lv:
 
-`# lvcreate -n lv_root -l +100%FREE /dev/vg_root  Logical volume`
+`# lvcreate -n lv_root -l +100%FREE /dev/vg_root`
 
-*"lv_root" created.*
+*Logical volume "lv_root" created.*
 
 Создадим на нем файловую систему и смонтируем его, чтобы перенести туда данные:
 
@@ -41,13 +41,14 @@
 `# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done`
 
 Создадим имитацию текущего root -> сделаем в него chroot и обновим grub:
+
 `# chroot /mnt/`
 
 Обновим образ initrd.
 
 ``# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img//g"` --force; done``
 
-В файле */boot/grub2/grub.cfg* нужно заменить предыдущий том lvm на вновь созданный: *rd.lvm.lv=VolGroup00/LogVol00* => *rd.lvm.lv=vg_root lv_root*
+В файле */boot/grub2/grub.cfg* нужно заменить предыдущий том lvm на вновь созданный: *rd.lvm.lv=VolGroup00/LogVol00* => *rd.lvm.lv=vg_root/lv_root*
 
 Перезагружаемся успешно с новым рут томом. Убедиться в этом можно посмотрев вывод lsblk:
 
