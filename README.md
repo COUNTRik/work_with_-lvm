@@ -154,6 +154,8 @@ Logical volume "lv_var" created.*
 
 ## Выделить lvm том gjl /home
 
+Выделяем том под /home и создаем на нем файловую систему:
+
 `# pvcreate /dev/sdb`
 
 `# vgcreate vg_home /dev/sdb`
@@ -162,23 +164,31 @@ Logical volume "lv_var" created.*
 
 `# mkfs.xfs /dev/vg_home/lv_home`
 
+Копируем данные из предыдущей /home, после удаляем ее:
+
 `# mount /dev/vg_home/lv_home /mnt/`
 
 `# rsync -avHPSAX /home/ /mnt/`
 
 `# rm -rf /home/*`
 
+Монтируем новый том вмеесте со скопированными данными:
+
 `# umount /mnt`
 
 `# mount /dev/vg_home/lv_home /home/`
 
+Добавляем строку в fstab для автоматического монтирования:
+
 ``echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab``
 
-`# touch /home/file{1..20}`
+##Работа со снапшотами
+
+Создание снапшота для /home:
 
 `# lvcreate -L 100MB -s -n home_snap /dev/vg_home/lv_home`
 
-`# rm -f /home/file{11..20}`
+Восстановление со снапшота:
 
 `# umount /home`
 
