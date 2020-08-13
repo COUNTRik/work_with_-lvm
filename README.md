@@ -43,6 +43,7 @@
 Создадим имитацию текущего root -> сделаем в него chroot и обновим grub:
 
 `# chroot /mnt/`
+
 `# grub2-mkconfig -o /boot/grub2/grub.cfg`
 
 Обновим образ initrd.
@@ -72,6 +73,7 @@ Logical volume "LogVol00" successfully removed*
 Создадим на нем файловую систему и смонтируем его, чтобы перенести туда данные:
 
 `# mkfs.xfs /dev/VolGroup00/LogVol00`
+
 `# mount /dev/VolGroup00/LogVol00 /mnt`
 
 Обратно скопируем все данные с / раздела в /mnt:
@@ -95,6 +97,7 @@ Logical volume "LogVol00" successfully removed*
 *Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
 
 Logical volume "lv_root" successfully removed*
+
 `# vgremove /dev/vg_root`
 
 *Volume group "vg_root" successfully removed*

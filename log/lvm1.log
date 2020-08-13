@@ -1,0 +1,636 @@
+Script started on 2020-08-13 10:49:08+03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="86" LINES="43"]
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ vagrant ssh
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo -s
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# pvcreate /dev/sdb
+  Physical volume "/dev/sdb" successfully created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgcreate vg_root /dev/sdb
+  Volume group "vg_root" successfully created
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n lv_root -l +100%FREE /dev/vg_root
+  Logical volume "lv_root" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/vg_root/lv_root
+meta-data=/dev/vg_root/lv_root   isize=512    agcount=4, agsize=655104 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2620416, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/vg_root/lv_root /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.7 (dump format 3.0)
+xfsdump: level 0 dump of lvm:/
+xfsdump: dump date: Thu Aug 13 07:50:07 2020
+xfsdump: session id: 08826b65-8944-442d-9e36-0b02176d7a74
+xfsdump: session label: ""
+xfsrestore: using file dump (drive_simple) strategy
+xfsrestore: version 3.1.7 (dump format 3.0)
+xfsrestore: searching media for dump
+xfsdump: ino map phase 1: constructing initial dump list
+xfsdump: ino map phase 2: skipping (no pruning necessary)
+xfsdump: ino map phase 3: skipping (only one dump stream)
+xfsdump: ino map construction complete
+xfsdump: estimated dump size: 739478464 bytes
+xfsdump: creating dump session media file 0 (media 0, file 0)
+xfsdump: dumping ino map
+xfsdump: dumping directories
+xfsrestore: examining media file 0
+xfsrestore: dump description: 
+xfsrestore: hostname: lvm
+xfsrestore: mount point: /
+xfsrestore: volume: /dev/mapper/VolGroup00-LogVol00
+xfsrestore: session time: Thu Aug 13 07:50:07 2020
+xfsrestore: level: 0
+xfsrestore: session label: ""
+xfsrestore: media label: ""
+xfsrestore: file system id: b60e9498-0baa-4d9f-90aa-069048217fee
+xfsrestore: session id: 08826b65-8944-442d-9e36-0b02176d7a74
+xfsrestore: media id: 3565780b-6f7c-4243-93b8-c19093600a95
+xfsrestore: searching media for directory dump
+xfsrestore: reading directories
+xfsdump: dumping non-directory files
+xfsrestore: 2720 directories and 23666 entries processed
+xfsrestore: directory post-processing
+xfsrestore: restoring non-directory files
+xfsdump: ending media file
+xfsdump: media file size 716310992 bytes
+xfsdump: dump size (non-dir files) : 703120368 bytes
+xfsdump: dump complete: 22 seconds elapsed
+xfsdump: Dump Status: SUCCESS
+xfsrestore: restore complete: 23 seconds elapsed
+xfsrestore: Restore Status: SUCCESS
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# or i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$ i; done
+bash: syntax error near unexpected token `do'
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/ $i; done
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# chroot /mnt/
+]0;root@lvm:/[?1034h[root@lvm /]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.2.3.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.2.3.el7.x86_64.img
+done
+]0;root@lvm:/[root@lvm /]# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s /initramfs-//g; s/.img//g"` --force; done
+Executing: /sbin/dracut -v initramfs-3.10.0-862.2.3.el7.x86_64.img 3.10.0-862.2.3.el7.x86_64 --force
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+*** Including module: bash ***
+*** Including module: nss-softokn ***
+*** Including module: i18n ***
+*** Including module: drm ***
+*** Including module: plymouth ***
+*** Including module: dm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 60-persistent-storage-dm.rules
+Skipping udev rule: 55-dm.rules
+*** Including module: kernel-modules ***
+Omitting driver floppy
+*** Including module: lvm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 56-lvm.rules
+Skipping udev rule: 60-persistent-storage-lvm.rules
+*** Including module: qemu ***
+*** Including module: resume ***
+*** Including module: rootfs-block ***
+*** Including module: terminfo ***
+*** Including module: udev-rules ***
+Skipping udev rule: 40-redhat-cpu-hotplug.rules
+Skipping udev rule: 91-permissions.rules
+*** Including module: biosdevname ***
+*** Including module: systemd ***
+*** Including module: usrmount ***
+*** Including module: base ***
+*** Including module: fs-lib ***
+*** Including module: shutdown ***
+*** Including modules done ***
+*** Installing kernel module dependencies and firmware ***
+*** Installing kernel module dependencies and firmware done ***
+*** Resolving executable dependencies ***
+*** Resolving executable dependencies done***
+*** Hardlinking files ***
+*** Hardlinking files done ***
+*** Stripping files ***
+*** Stripping files done ***
+*** Generating early-microcode cpio image contents ***
+*** No early-microcode cpio image needed ***
+*** Store current command line parameters ***
+*** Creating image file ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+]0;root@lvm:/boot[root@lvm boot]# vi grub2/grub.cfg
+[?1049h[?1h=[1;43r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[43;1H"grub2/grub.cfg" 127L, 3658C[1;1H#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub2-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+set pager=1
+
+if [ -s $prefix/grubenv ]; then
+  load_env
+fi
+if [ "${next_entry}" ] ; then
+   set default="${next_entry}"
+   set next_entry=
+   save_env next_entry
+   set boot_once=true
+else
+   set default="${saved_entry}"
+fi
+
+if [ x"${feature_menuentry_id}" = xy ]; then
+  menuentry_id_option="--id"
+else
+  menuentry_id_option=""
+fi
+
+export menuentry_id_option
+
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry[1;1H[?12l[?25h
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[25;1H[24;1H[23;1H[22;1H[21;1H[20;1H[19;1H[18;1H[17;1H[16;1H[15;1H[14;1H[13;1H[12;1H[11;1H[10;1H[9;1H[8;1H[7;1H[6;1H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[?25l[1;42r[42;1H
+[1;43r[42;3Hfi[43;1H[K[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H}[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hfunction load_video {[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hif [ x$feature_all_video_module = xy ]; then[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod all_video[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Helse[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod efi_gop[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod efi_uga[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod ieee1275_fb[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod vbe[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod vga[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod video_bochs[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hinsmod video_cirrus[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hfi[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H}[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hterminal_output console[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hif [ x$feature_timeout_style = xy ] ; then[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hset timeout_style=menu[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hset timeout=1[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H# Fallback normal timeout code in case the timeout_style feature is[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H# unavailable.[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Helse[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hset timeout=1[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hfi[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/00_header ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/00_tuned ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hset tuned_params=""[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hset tuned_initrd=""[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/00_tuned ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/01_users ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hif [ -f ${prefix}/user.cfg ]; then[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hsource ${prefix}/user.cfg[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hif [ -n "${GRUB2_PASSWORD}" ]; then[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hset superusers="root"[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hexport superusers[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;5Hpassword_pbkdf2 root ${GRUB2_PASSWORD}[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;3Hfi[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1Hfi[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/01_users ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/10_linux ###[?12l[?25h[?25l[1;42r[1;1H[3M[1;43r[40;1Hmenuentry 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' --class centos --class gg[41;1Hnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-88[42;1H62.2.3.el7.x86_64-advanced-c20b682f-8eeb-41a6-ae50-dbc83e332f06' {[40;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hload_video[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hset gfxpayload=keep[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hinsmod gzio[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hinsmod part_msdos[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hinsmod xfs[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hset root='hd0,msdos2'[42;8H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hif [ x$feature_platform_search_hint = xy ]; then[42;8H[?12l[?25h[?25l[1;42r[1;1H[2M[1;43r[41;11Hsearch --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hdd[42;1H0,msdos2 --hint-baremetal=ahci0,msdos2  570897ca-e759-4c81-90cf-389da6eee4cc[41;8H[?12l[?25h[40;8H[39;8H[38;8H[37;8H[36;8H[35;8H[34;8H[31;1H[30;1H[29;1H
+
+menuentry 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' -[34;18H[35;27H[36;19H[37;25H[38;18H[39;29H[40;56H[41;64H[?25l[1;42r[42;1H
+[1;43r[42;9Helse[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;11Hsearch --no-floppy --fs-uuid --set=root 570897ca-e759-4c81-90cf-389da6eee4cc[42;64H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hfi[?12l[?25h[?25l[1;42r[1;1H[4M[1;43r[39;9Hlinux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root roo[40;1H no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevatt[41;1Hor=noop crashkernel=auto rd.lvm.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rr[42;1Hhgb quiet[39;64H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;9Hinitrd16 /initramfs-3.10.0-862.2.3.el7.x86_64.img[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H}[?12l[?25h[?25l[1;42r[1;1H[3M[1;43r[40;1Hif [ "x$default" = 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' ]; then defaultt[41;1H='Advanced options for CentOS Linux>CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)''[42;1H; fi;[40;64H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/10_linux ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/20_linux_xen ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/20_linux_xen ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/20_ppc_terminfo ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/20_ppc_terminfo ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### BEGIN /etc/grub.d/30_os-prober ###[?12l[?25h[?25l[1;42r[42;1H
+[1;43r[42;1H### END /etc/grub.d/30_os-prober ###[?12l[?25h[41;38H[40;1H[39;39H[38;41H[37;1H[36;36H[35;38H[34;1H[33;32H[30;64H[29;1H[28;57H[24;64H[23;10H[22;64H[23;10H[24;64H[28;57H
+[30;64H[29;1H[28;57H[24;64H[23;10H[22;64H-4c81-90cf-389da6eee4c[23;10H[24;86H
+ no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 eleva
+or=noop crashkernel=auto rd.lvm.lv=VolGroup00/LogVol00[?25l[43;1H[1m-- INSERT --[26;55H[?12l[?25h[?25l[m rd.lvm.lv=VolGroup00/LogVol01 rhh[27;1Hgb quiet [26;54H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgg[27;1Hb quiet [26;53H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgbb[27;1H quiet [26;52H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb  [27;1Hquiet [26;51H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb qq[27;1Huiet [26;50H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quu[27;1Hiet [26;49H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quii[27;1Het [26;48H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiee[27;1Ht [26;47H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiett[27;1H [26;46H[?12l[?25h[?25l[24;42r[42;1H
+[1;43r[24;2H       linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root roo[25;1H no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevatt[26;1Hor=noop crashkernel=auto rd.lvm.lv=VolGroup0 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;45H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;44H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;43H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;42H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;41H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;40H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;39H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;38H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;37H[?12l[?25h[?25l rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet [26;36H[?12l[?25h[?25lv rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;37H[?12l[?25h[?25lg rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;38H[?12l[?25h[?25l_ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;39H[?12l[?25h[?25lr rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;40H[?12l[?25h[?25lo rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;41H[?12l[?25h[?25lo rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;42H[?12l[?25h[?25lt rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;43H[?12l[?25h[?25l/ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;44H[?12l[?25h[?25ll rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[26;45H[?12l[?25h[?25l[27;42r[27;1H[L[1;43r[26;45Hv rd.lvm.lv=VolGroup00/LogVol01 rhgb quiett[27;1H [26;46H[?12l[?25h[?25l_ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiee[27;1Ht[26;47H[?12l[?25h[?25lr rd.lvm.lv=VolGroup00/LogVol01 rhgb quii[27;1Het[26;48H[?12l[?25h[?25lo rd.lvm.lv=VolGroup00/LogVol01 rhgb quu[27;1Hiet[26;49H[?12l[?25h[?25lo rd.lvm.lv=VolGroup00/LogVol01 rhgb qq[27;1Huiet[26;50H[?12l[?25h[?25lt rd.lvm.lv=VolGroup00/LogVol01 rhgb  [27;1Hquiet[26;51H[?12l[?25h[43;1H[K[26;50H[?25l[?12l[?25h[?25l[43;1H:[?12l[?25hq[?25l[43;2H[K[43;2H[?12l[?25hw[?25l"grub2/grub.cfg" 127L, 3654C written[26;50H[?12l[?25h[42;1H[?25l[43;1H[K[43;1H:[?12l[?25hq[?25l[43;1H[K[43;1H[?1l>[?12l[?25h[?1049l]0;root@lvm:/boot[root@lvm boot]# va[K[Kcat /[Kgrub2/grub.cfg
+#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub2-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+set pager=1
+
+if [ -s $prefix/grubenv ]; then
+  load_env
+fi
+if [ "${next_entry}" ] ; then
+   set default="${next_entry}"
+   set next_entry=
+   save_env next_entry
+   set boot_once=true
+else
+   set default="${saved_entry}"
+fi
+
+if [ x"${feature_menuentry_id}" = xy ]; then
+  menuentry_id_option="--id"
+else
+  menuentry_id_option=""
+fi
+
+export menuentry_id_option
+
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry
+  fi
+}
+
+function load_video {
+  if [ x$feature_all_video_module = xy ]; then
+    insmod all_video
+  else
+    insmod efi_gop
+    insmod efi_uga
+    insmod ieee1275_fb
+    insmod vbe
+    insmod vga
+    insmod video_bochs
+    insmod video_cirrus
+  fi
+}
+
+terminal_output console
+if [ x$feature_timeout_style = xy ] ; then
+  set timeout_style=menu
+  set timeout=1
+# Fallback normal timeout code in case the timeout_style feature is
+# unavailable.
+else
+  set timeout=1
+fi
+### END /etc/grub.d/00_header ###
+
+### BEGIN /etc/grub.d/00_tuned ###
+set tuned_params=""
+set tuned_initrd=""
+### END /etc/grub.d/00_tuned ###
+
+### BEGIN /etc/grub.d/01_users ###
+if [ -f ${prefix}/user.cfg ]; then
+  source ${prefix}/user.cfg
+  if [ -n "${GRUB2_PASSWORD}" ]; then
+    set superusers="root"
+    export superusers
+    password_pbkdf2 root ${GRUB2_PASSWORD}
+  fi
+fi
+### END /etc/grub.d/01_users ###
+
+### BEGIN /etc/grub.d/10_linux ###
+menuentry 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-862.2.3.el7.x86_64-advanced-c20b682f-8eeb-41a6-ae50-dbc83e332f06' {
+	load_video
+	set gfxpayload=keep
+	insmod gzio
+	insmod part_msdos
+	insmod xfs
+	set root='hd0,msdos2'
+	if [ x$feature_platform_search_hint = xy ]; then
+	  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2  570897ca-e759-4c81-90cf-389da6eee4cc
+	else
+	  search --no-floppy --fs-uuid --set=root 570897ca-e759-4c81-90cf-389da6eee4cc
+	fi
+	linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=vg_root/lv_root rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet 
+	initrd16 /initramfs-3.10.0-862.2.3.el7.x86_64.img
+}
+if [ "x$default" = 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' ]; then default='Advanced options for CentOS Linux>CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)'; fi;
+### END /etc/grub.d/10_linux ###
+
+### BEGIN /etc/grub.d/20_linux_xen ###
+### END /etc/grub.d/20_linux_xen ###
+
+### BEGIN /etc/grub.d/20_ppc_terminfo ###
+### END /etc/grub.d/20_ppc_terminfo ###
+
+### BEGIN /etc/grub.d/30_os-prober ###
+### END /etc/grub.d/30_os-prober ###
+
+### BEGIN /etc/grub.d/40_custom ###
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+### END /etc/grub.d/40_custom ###
+
+### BEGIN /etc/grub.d/41_custom ###
+if [ -f  ${config_directory}/custom.cfg ]; then
+  source ${config_directory}/custom.cfg
+elif [ -z "${config_directory}" -a -f  $prefix/custom.cfg ]; then
+  source $prefix/custom.cfg;
+fi
+### END /etc/grub.d/41_custom ###
+]0;root@lvm:/boot[root@lvm boot]# exit
+exit
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# shutdown -r now
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ vagrant ssh
+Last login: Thu Aug 13 07:49:17 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo -s
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol00 253:2    0 37.5G  0 lvm  
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  /
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvremove /dev/VolGroup00/LogVol00
+Do you really want to remove active logical volume VolGroup00/LogVol00? [y/n]: y
+  Logical volume "LogVol00" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  /
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n VolGroup00/LogVol00 -L 8G /dev/VolGroup00
+WARNING: xfs signature detected on /dev/VolGroup00/LogVol00 at offset 0. Wipe it? [y/n]: y
+  Wiping xfs signature on /dev/VolGroup00/LogVol00.
+  Logical volume "LogVol00" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/VolGroup00/LogVol00
+meta-data=/dev/VolGroup00/LogVol00 isize=512    agcount=4, agsize=524288 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2097152, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/VolGroup00/LogVol00 /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# xfsdump -J - /dev/vg_root/lv_root | xfsrestore -J - /mnt
+xfsrestore: using file dump (drive_simple) strategy
+xfsrestore: version 3.1.7 (dump format 3.0)
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.7 (dump format 3.0)
+xfsdump: level 0 dump of lvm:/
+xfsdump: dump date: Thu Aug 13 07:58:53 2020
+xfsdump: session id: 0f4db331-bb7c-4d37-bab8-8135d7284a67
+xfsdump: session label: ""
+xfsrestore: searching media for dump
+xfsdump: ino map phase 1: constructing initial dump list
+xfsdump: ino map phase 2: skipping (no pruning necessary)
+xfsdump: ino map phase 3: skipping (only one dump stream)
+xfsdump: ino map construction complete
+xfsdump: estimated dump size: 738144768 bytes
+xfsdump: creating dump session media file 0 (media 0, file 0)
+xfsdump: dumping ino map
+xfsdump: dumping directories
+xfsrestore: examining media file 0
+xfsrestore: dump description: 
+xfsrestore: hostname: lvm
+xfsrestore: mount point: /
+xfsrestore: volume: /dev/mapper/vg_root-lv_root
+xfsrestore: session time: Thu Aug 13 07:58:53 2020
+xfsrestore: level: 0
+xfsrestore: session label: ""
+xfsrestore: media label: ""
+xfsrestore: file system id: c20b682f-8eeb-41a6-ae50-dbc83e332f06
+xfsrestore: session id: 0f4db331-bb7c-4d37-bab8-8135d7284a67
+xfsrestore: media id: 9c550743-fe2a-4477-8e66-5e7de8a02eff
+xfsrestore: searching media for directory dump
+xfsrestore: reading directories
+xfsdump: dumping non-directory files
+xfsrestore: 2724 directories and 23671 entries processed
+xfsrestore: directory post-processing
+xfsrestore: restoring non-directory files
+xfsdump: ending media file
+xfsdump: media file size 714971384 bytes
+xfsdump: dump size (non-dir files) : 701777072 bytes
+xfsdump: dump complete: 31 seconds elapsed
+xfsdump: Dump Status: SUCCESS
+xfsrestore: restore complete: 31 seconds elapsed
+xfsrestore: Restore Status: SUCCESS
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/ $i; done
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# chroot /mnt/
+]0;root@lvm:/[?1034h[root@lvm /]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.2.3.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.2.3.el7.x86_64.img
+done
+]0;root@lvm:/[root@lvm /]# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s /initramfs-//g; s/.img//g"` --force; done
+Executing: /sbin/dracut -v initramfs-3.10.0-862.2.3.el7.x86_64.img 3.10.0-862.2.3.el7.x86_64 --force
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+*** Including module: bash ***
+*** Including module: nss-softokn ***
+*** Including module: i18n ***
+*** Including module: drm ***
+*** Including module: plymouth ***
+*** Including module: dm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 60-persistent-storage-dm.rules
+Skipping udev rule: 55-dm.rules
+*** Including module: kernel-modules ***
+Omitting driver floppy
+*** Including module: lvm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 56-lvm.rules
+Skipping udev rule: 60-persistent-storage-lvm.rules
+*** Including module: qemu ***
+*** Including module: resume ***
+*** Including module: rootfs-block ***
+*** Including module: terminfo ***
+*** Including module: udev-rules ***
+Skipping udev rule: 40-redhat-cpu-hotplug.rules
+Skipping udev rule: 91-permissions.rules
+*** Including module: biosdevname ***
+*** Including module: systemd ***
+*** Including module: usrmount ***
+*** Including module: base ***
+*** Including module: fs-lib ***
+*** Including module: shutdown ***
+*** Including modules done ***
+*** Installing kernel module dependencies and firmware ***
+*** Installing kernel module dependencies and firmware done ***
+*** Resolving executable dependencies ***
+*** Resolving executable dependencies done***
+*** Hardlinking files ***
+*** Hardlinking files done ***
+*** Stripping files ***
+*** Stripping files done ***
+*** Generating early-microcode cpio image contents ***
+*** No early-microcode cpio image needed ***
+*** Store current command line parameters ***
+*** Creating image file ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+]0;root@lvm:/boot[root@lvm boot]# exit
+exit
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# shutdown -r now
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ vagrant ssh
+Last login: Thu Aug 13 07:56:54 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo -s
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:2    0   10G  0 lvm  
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvremove /dev/vg_root/lv_root
+Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
+  Logical volume "lv_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgremove /dev/vg_root
+  Volume group "vg_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /dev/sdb
+  Labels on physical volume "/dev/sdb" successfully wiped.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ exit
+exit
+
+Script done on 2020-08-13 11:06:17+03:00 [COMMAND_EXIT_CODE="0"]
