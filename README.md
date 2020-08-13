@@ -43,6 +43,7 @@
 Создадим имитацию текущего root -> сделаем в него chroot и обновим grub:
 
 `# chroot /mnt/`
+`# grub2-mkconfig -o /boot/grub2/grub.cfg`
 
 Обновим образ initrd.
 
