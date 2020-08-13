@@ -164,7 +164,7 @@ Logical volume "lv_var" created.*
 
 `# mount /dev/vg_home/lv_home /mnt/`
 
-cp -aR /home/* /mnt/
+`# rsync -avHPSAX /home/ /mnt/`
 
 `# rm -rf /home/*`
 
@@ -172,4 +172,16 @@ cp -aR /home/* /mnt/
 
 `# mount /dev/vg_home/lv_home /home/`
 
-*echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab*
+``echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab``
+
+`# touch /home/file{1..20}`
+
+`# lvcreate -L 100MB -s -n home_snap /dev/vg_home/lv_home`
+
+`# rm -f /home/file{11..20}`
+
+`# umount /home`
+
+`# lvconvert --merge /dev/vg_home/home_snap`
+
+`# mount /home`

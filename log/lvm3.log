@@ -1,0 +1,146 @@
+Script started on 2020-08-13 13:46:44+03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ [H[2J]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ vagrant ssh
+Last login: Thu Aug 13 10:18:45 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo -s
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0 37.5G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvcreate /dev/sdb
+  Physical volume "/dev/sdb" successfully created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgcreate vg_home /dev/sdb
+  Volume group "vg_home" successfully created
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n lv_home -L 5G /dev/vg_home
+  Logical volume "lv_home" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/vg_home/lv_home
+meta-data=/dev/vg_home/lv_home   isize=512    agcount=4, agsize=327680 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=1310720, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/vg_home/lv_home /mnt/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rsync -avHPSAX /home/ /mnt/
+sending incremental file list
+./
+vagrant/
+vagrant/.bash_history
+             60 100%    0.00kB/s    0:00:00               60 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=5/8)
+vagrant/.bash_logout
+             18 100%   17.58kB/s    0:00:00               18 100%   17.58kB/s    0:00:00 (xfr#2, to-chk=4/8)
+vagrant/.bash_profile
+            193 100%  188.48kB/s    0:00:00              193 100%  188.48kB/s    0:00:00 (xfr#3, to-chk=3/8)
+vagrant/.bashrc
+            231 100%  225.59kB/s    0:00:00              231 100%  225.59kB/s    0:00:00 (xfr#4, to-chk=2/8)
+vagrant/.ssh/
+vagrant/.ssh/authorized_keys
+            389 100%  379.88kB/s    0:00:00              389 100%  379.88kB/s    0:00:00 (xfr#5, to-chk=0/8)
+
+sent 1,743 bytes  received 138 bytes  3,762.00 bytes/sec
+total size is 891  speedup is 0.47
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rm -rf /home/*
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# umount /home/
+umount: /home/: not mounted
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# umount /home/[K
+umount: /home: not mounted
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount[K[K[K[K[Kumount /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/vg_home/lv_home /home/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs de faults 0 0" >> /etc/fstab
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /                       xfs     defaults        0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot                   xfs     defaults        0 0
+/dev/mapper/VolGroup00-LogVol01 swap                    swap    defaults        0 0
+UUID="39b67543-7b12-4109-ba51-a442e787df7e" /var ext4 defaults 0 0
+UUID="c8afda3f-1184-4f98-b2c5-57ffc1ce08aa" /home xfs defaults 0 0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# touch /home/file{1..20}
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Hom e[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kvg_home/lv_home[1P[1P[1P[C[1P[1@G[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+  Logical volume "home_snap" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0 37.5G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+├─vg_home-lv_home-real   253:8    0    5G  0 lvm  
+│ ├─vg_home-lv_home      253:7    0    5G  0 lvm  /home
+│ └─vg_home-home_snap    253:10   0    5G  0 lvm  
+└─vg_home-home_snap-cow  253:9    0    1G  0 lvm  
+  └─vg_home-home_snap    253:10   0    5G  0 lvm  
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rm -f /home/file{11..20}
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# umount /home
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvconvert --merge /dev/vg_home/home_snap 
+  Merging of volume vg_home/home_snap started.
+  vg_home/lv_home: Merged: 100.00%
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /home/[K
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0 37.5G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+└─vg_home-lv_home        253:7    0    5G  0 lvm  /home
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  752M  0 lvm  
+  └─vg_var-lv_var        253:6    0  752M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+]0;albert@albert-ubuntu: ~/otus.linux/work_with_lvm[01;32malbert@albert-ubuntu[00m:[01;34m~/otus.linux/work_with_lvm[00m$ exit
+exit
+
+Script done on 2020-08-13 13:53:14+03:00 [COMMAND_EXIT_CODE="0"]
