@@ -178,7 +178,7 @@ Logical volume "lv_var" created.*
 
 ``echo "`blkid | grep lv_home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab``
 
-##Работа со снапшотами
+## Работа со снапшотами
 
 Создание снапшота для /home:
 
