@@ -6,17 +6,20 @@
 
 Подготовим временный том для / раздела.
 
+
 Создаем раздел pv:
 
 `# pvcreate /dev/sdb`
 
 *Physical volume "/dev/sdb" successfully created.*
 
+
 Создаем раздел vm:
 
 `# vgcreate vg_root /dev/sdb`
 
 *Volume group "vg_root" successfully created*
+
 
 Создаем раздел lv:
 
