@@ -133,7 +133,8 @@ Logical volume "lv_var" created.*
  Перемещаем туда /var:
 
  `# mount /dev/vg_var/lv_var /mnt`
- `# cp -aR /var/* /mnt/`
+
+ `# rsync -avHPSAX /var/ /mnt/`
 
  На всякий случай сохраняем содержимое старого var:
 
@@ -147,7 +148,7 @@ Logical volume "lv_var" created.*
 
  Правим fstab для автоматического монтирования /var:
 
- *echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab*
+ ``echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab``
 
  Перезагружаемся и командой lsblk проверяем.
 
