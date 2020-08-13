@@ -2,23 +2,23 @@
 
 В данной работе представлены примеры работы с LVM. Все команды производятся с правами root.  
 
-## Уменьшить том под / (корневой каталог) до 8G
+Уменьшить том под / (корневой каталог) до 8G
 
-### Подготовим временный том для / раздела.
+Подготовим временный том для / раздела.
 
-### Создаем раздел pv:
+Создаем раздел pv:
 
 `# pvcreate /dev/sdb`
 
 *Physical volume "/dev/sdb" successfully created.*
 
-### Создаем раздел vm:
+Создаем раздел vm:
 
 `# vgcreate vg_root /dev/sdb`
 
 *Volume group "vg_root" successfully created*
 
-###Создаем раздел lv:
+Создаем раздел lv:
 
 `# lvcreate -n lv_root -l +100%FREE /dev/vg_root`
 
@@ -61,7 +61,6 @@ s/.img//g"` --force; done``
 `# lvremove /dev/VolGroup00/LogVol00`
 
 *Do you really want to remove active logical volume VolGroup00/LogVol00? [y/n]: y
-
 Logical volume "LogVol00" successfully removed*
 
 Создаем новый на 8G:
@@ -95,7 +94,6 @@ Logical volume "LogVol00" successfully removed*
 `# lvremove /dev/vg_root/lv_root`
 
 *Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
-
 Logical volume "lv_root" successfully removed*
 
 `# vgremove /dev/vg_root`
@@ -113,7 +111,6 @@ Logical volume "lv_root" successfully removed*
 `# pvcreate /dev/sdc /dev/sdd`
 
 *Physical volume "/dev/sdc" successfully created.
-
 Physical volume "/dev/sdd" successfully created.*
 
 `# vgcreate vg_var /dev/sdc /dev/sdd`
@@ -123,7 +120,6 @@ Physical volume "/dev/sdd" successfully created.*
 `# lvcreate -L 750M -m1 -n lv_var vg_var`
 
 *Rounding up size to full physical extent 752.00 MiB
-
 Logical volume "lv_var" created.*
 
 Создаем на нем ФС:
